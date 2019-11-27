@@ -1,0 +1,151 @@
+This practical aims to guide you through some of the key ideas in
+**ggplot2**. As with the first practical, feel free to experiment. Some of the functions introduced in this practical haven't been explicitly covered in the notes. Use the built-in R help or the **ggplot2** help pages at
+
+> http://had.co.nz/ggplot2/
+
+\noindent as needed.
+
+
+## Over plotting
+
+Scatter plots are very useful. However, when we have a large data set, points
+will be plotted on top of each other obscuring the relationship. We call this
+problem over plotting. There are a few techniques we can use to help, although
+the best solution is often problem specific.
+
+To begin with we will create an example data frame:
+
+```{r,overplotting, tidy=FALSE, echo=1:4}
+## If your computer is slow when plotting reduce the value of n
+library("jrGgplot2Bio")
+library("ggplot2")
+df = overplot_data(n = 20000)
+h = ggplot(df) + geom_point(aes(x, y))
+```
+
+```{r,echo=FALSE, fig.margin = TRUE, fig.cap="A scatter plot that suffers from over plotting.", fig.height = 4}
+h
+```
+
+\noindent We can create a simple scatter plot of this data using the following command
+
+```{r, echo = TRUE}
+h = ggplot(df) + geom_point(aes(x, y))
+```
+
+\noindent This plot isn't particularly good. Try to improve it by using a
+combination of:
+
+
+- changing the transparency level: `alpha`;^[`alpha` takes a value between $0$ and $1$.]
+- change the shape: `shape=1` and `shape=`.'`
+- use some jittering - `geom_jitter`.
+- adding a contour to the plot using `stat_density2d`.
+- What does
+
+```{r,cache=TRUE, fig.keep='none', tidy=FALSE, echo = TRUE}
+h +  stat_density2d(aes(x, y, fill = ..density..),
+                contour = FALSE, geom = "tile")
+```
+do?    
+- What does `stat_bin2d()` and `stat_binhex()` do - add it to the
+  plot to find out! Try varying the parameters `bins` and `binwidth`.
+
+
+## Displaying distributions
+
+Lets return to the outbreaks data to look at how to visualise distributions. 
+
+```{r, echo = TRUE}
+data(outbreaks, package = "jrGgplot2Bio")
+```
+
+\noindent First lets calculate a new variable, log transformed illnesses. This is because the distribution of illnesses is very skewed, recall some of the plots from the first practical.
+
+```{r,tidy=FALSE, echo = TRUE}
+outbreaks$log_illness = log(outbreaks$illnesses)
+```
+
+\noindent We can construct a histogram of log transformed illness counts using the following commands:
+
+```{r,fig.keep='none', message=FALSE, echo = TRUE}
+ggplot(data = outbreaks) +
+  geom_histogram(aes(x = log_illness))
+```
+
+```{r,echo=FALSE, message=FALSE, fig.margin = TRUE, fig.cap = "Histogram of log illnesses caused by three pathogens in the USA", fig.height = 4}
+ggplot(data = outbreaks) +
+  geom_histogram(aes(x = log_illness))
+```
+
+
+\noindent to get figure 2. Let's experiment a bit.
+
+1. Change the `bins` in the `geom_histogram`. What value do you
+  think is best?
+2. What happens when you set `fill=species` in the `geom_histogram`
+  aesthetic? What other options can you change?^[Look at the `geom_histogram` help page: http://had.co.nz/ggplot2/geom_histogram.html}
+3. Try `geom_density`. Set `fill=species` and change the `alpha` value.
+
+
+
+## Copy cat
+
+```{r,F1, echo=FALSE, message=FALSE, fig.keep='none',results='hide'}
+library(dplyr)
+data(yeast, package = "jrGgplot2Bio")
+yeast = yeast %>% filter(class == "CYT" | class == "EXC")
+```
+
+The aim of this section is to recreate the graphics in figure 3. Feel
+free to experiment. To begin, load the package and subset the data.
+
+```{r,results='hide', echo = TRUE}
+library(dplyr)
+data(yeast, package = "jrGgplot2Bio")
+yeast = yeast %>% filter(class == "CYT" | class == "EXC")
+```
+
+```{r,dev='png', out.width='\\textwidth', echo=FALSE, message=FALSE, fig.margin = TRUE, fig.cap = "Two measure of signal sequence recognition and two groups of proteins", fig.height = 4}
+ggplot(yeast, aes(x = gvh, y = mcg)) +
+  geom_point(aes(col = class)) +
+  geom_density2d(aes(col = class), alpha = 0.5) +
+  xlab("von Heijne's method") +
+  ylab("McGeoch's method")
+```
+
+1. Figure 3: Create a scatter plot of McGeoch's method for signal sequence recognition,
+  `mcg`, against von Heijne's method, `gvh`. To get started:
+
+```{r,fig.keep='none', tidy=FALSE, echo = TRUE}
+ggplot(yeast, aes(x = gvh, y = mcg)) +
+  geom_point() +
+  xlab("von Heijne's method")
+```
+
+Now add the densisity lines and change the $y$-axis label.
+Hint: try `geom_density2d` and `ylab(`New label')`.
+
+```{r, fig.keep='none'}
+ggplot(yeast, aes(x = gvh, y = mcg)) +
+  geom_point() +
+  geom_density2d() +
+  xlab("von Heijne's method") +
+  ylab("McGeoch's method") 
+```
+
+2. Using the `col` aesthetic, add colour to the points and density lines dependent upon the `class` variable. For the final touch adjust the transparency of the density lines.
+```{r, fig.keep='none'}
+ggplot(yeast, aes(x = gvh, y = mcg)) +
+  geom_point(aes(col = class)) +
+  geom_density2d(aes(col = class), alpha = 0.5) +
+  xlab("von Heijne's method") +
+  ylab("McGeoch's method")
+```
+
+## Solutions
+
+Solutions are contained within this package:
+```{r,eval=FALSE, echo=TRUE}
+vignette("solutions2", package = "jrGgplot2Bio")
+```

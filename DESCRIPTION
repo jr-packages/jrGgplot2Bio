@@ -1,0 +1,38 @@
+Type: Package
+Package: jrGgplot2Bio
+Title: Advanced R graphics
+Version: 0.1.5
+Authors@R: 
+    person(given = "Jumping",
+           family = "Rivers",
+           role = c("aut", "cre"),
+           email = "info@jumpingrivers.com")
+Description: An R package for the Advanced graphics R course run
+    by Jumping Rivers Ltd.
+License: GPL-2 | GPL-3
+URL: https://www.jumpingrivers.com
+Depends:
+    R (>= 3.3.0)
+Imports:
+    dplyr,
+    GGally,
+    ggplot2,
+    ggplot2movies,
+    ggrepel,
+    ggridges,
+    ggthemes,
+    gridExtra,
+    hexbin,
+    hrbrthemes,
+    plotly,
+    quantreg
+Suggests:
+    DT,
+    formatR,
+    knitr,
+    lintr,
+    tufte
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+RoxygenNote: 6.1.1

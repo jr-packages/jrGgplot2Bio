@@ -1,0 +1,216 @@
+If you attended the Introduction to R course with us, you will already be familiar with some of the basic **ggplot2** concepts. This practical serves as a reminder on some of those concepts, whilst also introducing some new ones. If you didn't attend this course, use this practical as a introduction to the basic concepts of **ggplot2**. Some these of plots aren't particularly useful, we are just using them for illustration purposes.
+
+\newthought{To begin with}, load the **ggplot2** package^[The **ggplot2** package is
+automatically installed with **jrGgplot2Bio**.]
+
+```{r, echo = TRUE}
+library("ggplot2")
+```
+
+\noindent Next we load the _outbreaks_ data set:^[Details of the outbreaks data set can be found at in its helpfile, see `?outbreaks`] These are incidence numbers for three pathogens across three states in the USA.
+
+```{r, echo = TRUE}
+data(outbreaks, package = "jrGgplot2Bio")
+```
+
+\noindent When loading in data, it's always a good idea to carry out a sanity
+check. I tend to use the commands
+
+```{r,results='hide', echo = TRUE}
+head(outbreaks)
+colnames(outbreaks)
+dim(outbreaks)
+```
+
+## Scatter plots
+
+Scatter plots are created using the point geom. Let's start with a basic scatter
+plot
+
+```{r,fig.keep='none', echo = TRUE, warning=FALSE}
+ggplot(data = outbreaks) +
+  geom_point(aes(x = illnesses, y = hospitalizations))
+```
+
+\noindent To save typing, we can also store the plot as a variable:^[In
+  this practical, we are creating the plots in a slightly verbose way.]
+
+```{r,cache=TRUE, echo = TRUE}
+g = ggplot(data = outbreaks)
+g1 = g + geom_point(aes(x = illnesses, y = hospitalizations))
+```
+
+\noindent To view this plot, type `g1`.
+
+The arguments `x` and `y` are called aesthetics. For `geom_point`,
+these parameters are required. This particular geom has other aesthetics:
+`shape`, `colour`, `size` and `alpha`.^[These aesthetics are
+  usually available for most geoms.] Here are some things to try out.
+
+- Experiment with other aesthetics. For example,
+
+```{r,fig.keep='none', echo = TRUE, warning=FALSE}
+g + geom_point(aes(x = illnesses, y = hospitalizations, colour = species))
+```
+
+\noindent or
+
+```{r,fig.keep='none', tidy=FALSE, cache=TRUE, echo = TRUE, warning=FALSE}
+g + geom_point(aes(x = illnesses, y = hospitalizations, colour = species,
+                   alpha = status))
+```
+
+Some aesthetics, like `shape` must be discrete. We might have to transform the variable into a
+character or factor - for example `shape = factor(year)`.
+
+- Are there any differences between numeric values like `tenured` and
+  characters like `gender` for some aesthetics? What happens if you use
+  a numeric such as `fatalities` in the `colour` aesthetic. For example, `colour = fatalities`.
+
+- What happens if you set `colour` (or some other aesthetic) outside of
+  the `aes` function? For example, compare
+
+```{r,fig.keep='none', echo = TRUE, warning=FALSE}
+g + geom_point(aes(x = illnesses, y = hospitalizations, colour = "Blue"))
+```
+
+\noindent to
+
+```{r,fig.keep='none', echo = TRUE, warning=FALSE}
+g + geom_point(aes(x = illnesses, y = hospitalizations), colour = "Blue")
+```
+
+- What happens when you set an aesthetic to a constant value. For example,
+  `colour = 2`. What happens if you put this argument outside of the `aes`
+  function?
+
+
+
+## Box plots
+
+The box plot geom has the following aesthetics: `x`, `y`, `colour`,
+`fill`, `linetype`, `weight`, `size` and `alpha`. We can create a
+basic boxplot using the following commands:
+
+```{r,fig.keep='none', echo = TRUE}
+g + geom_boxplot(aes(x = species, y = illnesses))
+```
+
+\noindent Similar to the point geom, we can add in aesthetics:
+
+```{r,fig.keep='none', cache=TRUE, tidy=FALSE, echo = TRUE}
+g + geom_boxplot(aes(x = species, y = illnesses, colour = factor(year)))
+```
+
+\noindent Why do you think we have to convert `year` to a discrete factor?
+
+As before, experiment with the different aesthetics. For some of the aesthetics,
+you will need to convert the continuous variables to discrete variables. For example, this will not work as intended:
+
+```{r,eval=FALSE, echo = TRUE}
+g + geom_boxplot(aes(x = species, y = illnesses, colour = year))
+```
+
+\noindent while this is OK^[Why?]
+
+```{r,fig.keep='none', tidy=FALSE, echo = TRUE}
+g + geom_boxplot(aes(x = species, y = illnesses, colour = factor(year)))
+```
+
+\noindent Make sure you play about with the different aesthetics.
+
+## Combining plots
+
+The key idea with **ggplot2** is to think in terms of layers not in terms of plot "types".^[In the lectures we will discuss what this means.] For
+example,
+
+```{r,fig.keep='none', tidy=FALSE, echo = TRUE}
+g + geom_boxplot(aes(x = species, y = illnesses, colour = factor(year))) +
+  geom_point(aes(x = species, y = illnesses))
+
+```
+
+
+- What happens to the plot if you swap the order of the `geom_boxplot`
+  and `geom_point` function calls?
+- In this case, `geom_point` isn't that great. Try using
+  `geom_jitter`^[We have a bit too much data for
+    `geom_jitter`, but you get the point.]:
+
+```{r,fig.keep='none', tidy=FALSE, echo = TRUE}
+g + 
+  geom_jitter(aes(x = species, y = illnesses)) +
+  geom_boxplot(aes(x = species, y = illnesses, colour = factor(year)))
+```
+
+Again this is probably not how you would want to visualise this data but hopefully you get the idea of combining different layers to make a composite plot. 
+
+
+## Bar plots
+
+Lets looks at bar plots using the yeast dataset[^1]. These are multiple different properties of the amino acid sequences of yeast proteins alongside the subcellular localisation of the same proteins.
+
+```{r, echo=TRUE}
+data(yeast, package = "jrGgplot2Bio")
+```
+
+
+[^1]: Paul Horton & Kenta Nakai, ["A Probablistic Classification System for Predicting the Cellular Localization Sites of Proteins"](https://www.aaai.org/Papers/ISMB/1996/ISMB96-012.pdf), Intelligent Systems in Molecular Biology, 109-115. St. Louis, USA 1996. 
+
+The bar geom has the following aesthetics: `x`, `colour`, `fill`,
+`size`, `linetype`, `weight` and `alpha`. Here is a command to get
+started:
+
+```{r,fig.keep='none', echo = TRUE}
+g = ggplot(yeast)
+g + geom_bar(aes(x = class))
+```
+
+Note that the `geom_bar` needed only one aesthetic, what happened? What is on the y-axis? As before, if you want to experiment feel free, try different aesthetic combinations. Now let's get a bit more fancy. 
+
+Lets re-order the bars according to the number of loci represented. We do this by altering the levels of the factor itself.
+
+First lets calculate the counts ourselves so that we have a data object that we can better manipulate.
+
+```{r,fig.keep='none', echo = TRUE, message=FALSE}
+library(dplyr)
+class_counts = yeast %>% count(class)
+```
+
+\noindent Now we can manipulate the factor levels of our new dataset.
+
+```{r,fig.keep='none', echo = TRUE}
+class_counts$class = reorder(class_counts$class, class_counts$n)
+```
+
+\noindent then plot:
+
+```{r,fig.keep='none', echo = TRUE}
+g = ggplot(class_counts)
+g + geom_bar(aes(x = class, y = n), stat = "identity")
+```
+
+\noindent Notice that we now needed the `stat = "identity"` argument to override the behaviour of `geom_bar` which takes a row count by default.
+
+\noindent We can flip the axes using the `coord_flip()` function.
+
+```{r,fig.keep='none', tidy=FALSE, echo = TRUE}
+g + 
+  geom_bar(aes(x = class, y = n), stat = "identity") +
+  coord_flip()
+```
+
+- Try the other adjustments.
+
+```{r,echo=FALSE, fig.margin = TRUE, fig.cap="Barplot with ordered bars and axes flipped", fig.height = 4}
+g + 
+  geom_bar(aes(x = class, y = n), stat = "identity") +
+  coord_flip()
+```
+
+## Solutions
+
+Solutions are contained within this package:
+```{r,eval=FALSE, echo=TRUE}
+vignette("solutions1", package = "jrGgplot2Bio")
+```

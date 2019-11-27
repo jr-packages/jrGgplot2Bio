@@ -1,0 +1,176 @@
+This practical aims to guide you through some of the key ideas in data manipulation. I've tried to construct this practical in such a way that you get to experiment with the various tools. Feel free to experiment!
+
+```{r,echo=FALSE}
+library("ggplot2")
+data(aphids, package = "jrGgplot2Bio")
+```
+
+```{r, echo=FALSE, cache=TRUE, pos.width="\\textwidth", fig.width=6, fig.pos = "t", fig.cap = "Final figure from section 1.", fig.height = 5}
+aphids$Block = factor(aphids$Block)
+aphids$Water = factor(aphids$Water,
+                      levels = c("Low", "Medium", "High"))
+ga = ggplot(data = aphids) +
+  geom_point(aes(Time, Aphids, colour = Block)) +
+  facet_grid(Nitrogen ~ Water) +
+  geom_line(aes(Time, Aphids, colour = Block)) +
+  theme_bw()
+
+print(ga)
+```
+
+
+## Aphids
+
+This data set consists of seven observations on cotton aphid counts on twenty randomly chosen leaves in each plot, for twenty-seven treatment-block
+combinations. The data were recorded in July 2004 in Lamesa, Texas. The
+treatments consisted of three nitrogen levels (blanket, variable and none),
+three irrigation levels (low, medium and high) and three blocks, each being a
+distinct area. Irrigation treatments were randomly assigned within each block as
+whole plots. Nitrogen treatments were randomly assigned within each whole block
+as split plots.
+
+```{r,cache=TRUE, results='hide', echo = TRUE}
+data(aphids, package = "jrGgplot2Bio")
+```
+
+\noindent The sampling times are once per week.
+
+\newthought{Reproduce} figure 1. Here are some hints to get you started.
+The key idea is to think of the plot in terms of layers. So
+
+- Leave the ordering of factors to the end
+- The plot contains a combination of `geom_line` and `geom_point`.
+- You can change the x-axis label using
+```{r,eval=FALSE, tidy=FALSE, echo = TRUE}
+ + xlab("Time")
+```
+- Change the theme using `theme_bw()`
+
+\newpage
+```{r,fig.keep='none', tidy=FALSE}
+##Code for figure 1
+aphids$Block = factor(aphids$Block)
+aphids$Water = factor(aphids$Water,
+                      levels = c("Low", "Medium", "High"))
+ga = ggplot(data = aphids) +
+  geom_point(aes(Time, Aphids, colour = Block)) +
+  facet_grid(Nitrogen ~ Water) +
+  geom_line(aes(Time, Aphids, colour = Block)) +
+  theme_bw()
+```
+
+## Yeast Facets
+
+First load the yeast data set
+```{r, echo = TRUE}
+data(yeast, package = "jrGgplot2Bio")
+```
+
+\noindent In practical 2, we split data up by the subcellular localisation (`class`) but we only looked at a few of the localisations. Lets start by plotting the signal sequence recognition measures for all of the subcellular localisations. Use the following commands:
+
+```{r,fig.keep='none', echo = TRUE}
+g = ggplot(data = yeast)
+g1 = g + geom_point(aes(x = gvh, y = mcg, col = class))
+```
+
+```{r,echo=FALSE, pos.width="\\textwidth", fig.margin = TRUE, fig.cap = "Signal sequence recognition for proteins of different subcellular localisations", label = "F2", fig.height = 4}
+g1
+```
+
+\noindent to get figure 2. In addition using the `fill` aesthetic, redo the plot but use
+`facet_grid` and `facet_wrap`. For example,
+
+```{r,fig.keep='none', echo = TRUE}
+g + 
+  geom_point(aes(x = gvh, y = mcg, col = class)) +
+  facet_grid(~ class)
+```
+
+\noindent Experiment with:
+
+- the `margins` argument
+```{r, fig.keep='none'}
+g + 
+  geom_point(aes(x = gvh, y = mcg, col = class)) +
+  facet_grid(~ class, margins = TRUE)
+```
+
+- the `scales=` argument.
+```{r,fig.keep='none'}
+g + 
+  geom_point(aes(x = gvh, y = mcg, col = class)) +
+  facet_grid(~ class, scales = "free")
+```
+
+- the layout, i.e. column or row.
+```{r,fig.keep='none'}
+g + 
+  geom_point(aes(x = gvh, y = mcg, col = class)) +
+  facet_grid(class ~ .)
+```
+
+
+## Outbreaks Over Time
+
+```{r,F3,echo=FALSE}
+data("outbreaks", package = "jrGgplot2Bio")
+g = ggplot(outbreaks, aes(x = year, y = illnesses)) +
+  geom_point() +
+  geom_smooth() +
+  scale_y_log10() +
+  facet_grid(state ~ species)
+```
+
+In the outbreaks data we have 3 species of pathogen, 3 states in the US and a timeline of infection incidences for each combination. We now have the tools to visualise the whole lot in one go. 
+
+```{r, echo = TRUE}
+data("outbreaks", package = "jrGgplot2Bio")
+```
+
+```{r,echo=FALSE, pos.width="\\textwidth", fig.margin = TRUE, fig.cap = "The Outbreaks data set.", fig.height = 4}
+g
+```
+
+1. Create a scatter of plot of `illnesses` and `year`.
+2. Using `scale_y_log10()` transform the `y` scale.
+3. Add a smoothed line of best fit with `geom_smooth()`.
+4. Use a facet grid of `state ~ species` to separate the data across those two categories.
+
+```{r,tidy=FALSE}
+g = ggplot(outbreaks, aes(x = year, y = illnesses)) +
+  geom_point() +
+  geom_smooth() +
+  scale_y_log10() +
+  facet_grid(state ~ species)
+```
+
+
+## Bonus: Multivariate datasets
+
+The yeast dataset has a lot of variables in it, all measuring different aspects of the amino acid sequences. We have considered a few of these and found interesting patterns that relate to the subcellular locations in the cell. What about the other variables though? What have we left behind? Wouldn't it be nice if we had a way of visualising more of the possible relationships at once?
+
+The _ggplot2_ package has lots and lots of extensions, one such extension that we will use to make a matrix of pairwise plots is `GGally` (http://ggobi.github.io/ggally/)[http://ggobi.github.io/ggally/].
+
+Lets load the package and choose some variables to plot:
+
+```{r, echo = TRUE, message=FALSE}
+library(dplyr)
+library(GGally)
+data(yeast, package = "jrGgplot2Bio")
+yeast = select(yeast, -seq, -erl, -pox)
+```
+
+Now use the ggpairs function to make a grid of pairwise plots. Look at the documentation and experiment with some of the different arguments. For example try adding `aes(colour = class)`.
+
+```{r, fig.keep='none', message=FALSE}
+ggpairs(yeast)
+```
+
+
+## Solutions
+
+Solutions are contained within this package:
+```{r,eval=FALSE, echo = TRUE}
+vignette("solutions3", package = "jrGgplot2Bio")
+```
+
