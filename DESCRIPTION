@@ -25,7 +25,8 @@ Imports:
     hexbin,
     hrbrthemes,
     plotly,
-    quantreg
+    quantreg,
+    jrGgplot2
 Suggests:
     DT,
     formatR,
