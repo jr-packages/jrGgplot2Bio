@@ -35,5 +35,7 @@ Suggests:
     tufte
 VignetteBuilder: 
     knitr
+Remotes:
+    jr-packages/jrGgplot2
 Encoding: UTF-8
 RoxygenNote: 6.1.1
