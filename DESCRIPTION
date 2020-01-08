@@ -24,9 +24,9 @@ Imports:
     gridExtra,
     hexbin,
     hrbrthemes,
+    jrGgplot2,
     plotly,
-    quantreg,
-    jrGgplot2
+    quantreg
 Suggests:
     DT,
     formatR,
@@ -38,4 +38,4 @@ VignetteBuilder:
 Remotes:
     jr-packages/jrGgplot2
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

@@ -9,7 +9,8 @@ library("ggplot2")
 df = overplot_data(n = 20000)
 h = ggplot(df) + geom_point(aes(x, y))
 
-## ----echo=FALSE, fig.margin = TRUE, fig.cap="A scatter plot that suffers from over plotting.", fig.height = 4----
+## ----echo=FALSE, fig.margin = TRUE, fig.cap="A scatter plot that
+## suffers from over plotting.", fig.height = 4----
 h
 
 ## ---- echo = TRUE--------------------------
@@ -29,7 +30,9 @@ outbreaks$log_illness = log(outbreaks$illnesses)
 ggplot(data = outbreaks) +
   geom_histogram(aes(x = log_illness))
 
-## ----echo=FALSE, message=FALSE, fig.margin = TRUE, fig.cap = "Histogram of log illnesses caused by three pathogens in the USA", fig.height = 4----
+## ----echo=FALSE, message=FALSE, fig.margin = TRUE,
+## fig.cap = "Histogram of log illnesses caused by three
+## pathogens in the USA", fig.height = 4----
 ggplot(data = outbreaks) +
   geom_histogram(aes(x = log_illness))
 
@@ -43,7 +46,9 @@ library(dplyr)
 data(yeast, package = "jrGgplot2Bio")
 yeast = yeast %>% filter(class == "CYT" | class == "EXC")
 
-## ----dev='png', out.width='\\textwidth', echo=FALSE, message=FALSE, fig.margin = TRUE, fig.cap = "Two measure of signal sequence recognition and two groups of proteins", fig.height = 4----
+## ----dev='png', out.width='\\textwidth', echo=FALSE, message=FALSE,
+## fig.margin = TRUE, fig.cap = "Two measure of signal sequence
+## recognition and two groups of proteins", fig.height = 4----
 ggplot(yeast, aes(x = gvh, y = mcg)) +
   geom_point(aes(col = class)) +
   geom_density2d(aes(col = class), alpha = 0.5) +
@@ -70,6 +75,5 @@ ggplot(yeast, aes(x = gvh, y = mcg)) +
   ylab("McGeoch's method")
 
 ## ----eval=FALSE, echo=TRUE-----------------
-#  library(jrGgplot2)
-#  vignette("solutions2", package = "jrGgplot2")
-
+library(jrGgplot2)
+vignette("solutions2", package = "jrGgplot2")

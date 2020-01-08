@@ -6,7 +6,9 @@ knitr::opts_chunk$set(results = "show", echo = TRUE)
 library("ggplot2")
 data(aphids, package = "jrGgplot2")
 
-## ---- echo=FALSE, cache=TRUE, pos.width="\\textwidth", fig.width=6, fig.pos = "t", fig.cap = "Final figure from section 1.", fig.height = 5----
+## ---- echo=FALSE, cache=TRUE, pos.width="\\textwidth", fig.width=6,
+## fig.pos = "t", fig.cap = "Final figure from section 1.",
+## fig.height = 5----
 aphids$Block = factor(aphids$Block)
 aphids$Water = factor(aphids$Water,
                       levels = c("Low", "Medium", "High"))
@@ -42,7 +44,9 @@ data(yeast, package = "jrGgplot2Bio")
 g = ggplot(data = yeast)
 g1 = g + geom_point(aes(x = gvh, y = mcg, col = class))
 
-## ----echo=FALSE, pos.width="\\textwidth", fig.margin = TRUE, fig.cap = "Signal sequence recognition for proteins of different subcellular localisations", label = "F2", fig.height = 4----
+## ----echo=FALSE, pos.width="\\textwidth", fig.margin = TRUE,
+## fig.cap = "Signal sequence recognition for proteins of different
+## subcellular localisations", label = "F2", fig.height = 4----
 g1
 
 ## ----fig.keep='none', echo = TRUE----------
@@ -76,7 +80,8 @@ g = ggplot(outbreaks, aes(x = year, y = illnesses)) +
 ## ---- echo = TRUE--------------------------
 data("outbreaks", package = "jrGgplot2Bio")
 
-## ----echo=FALSE, pos.width="\\textwidth", fig.margin = TRUE, fig.cap = "The Outbreaks data set.", fig.height = 4----
+## ----echo=FALSE, pos.width="\\textwidth", fig.margin = TRUE,
+## fig.cap = "The Outbreaks data set.", fig.height = 4----
 g
 
 ## ----tidy=FALSE----------------------------
@@ -96,6 +101,5 @@ yeast = select(yeast, -seq, -erl, -pox)
 ggpairs(yeast)
 
 ## ----eval=FALSE, echo = TRUE---------------
-#  library("jrGgplot2")
-#  vignette("solutions3", package = "jrGgplot2")
-
+# library("jrGgplot2")
+# vignette("solutions3", package = "jrGgplot2")
