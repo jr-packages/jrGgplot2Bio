@@ -13,8 +13,10 @@ vignette: >
 
 Perhaps the easiest `stat_*` to consider is the `stat_summary()` function. This function summarises `y` values at every unique `x` value. This is quite handy, for example, when adding single points that summarise the data or adding error bars.
 
+
 ```{r, echo=FALSE, message=TRUE, label="F2-11", fig.margin = TRUE, fig.cap="Average number of units consumed per actor.", fig.width=4, fig.height=4, message = FALSE}
 library("ggplot2")
+library("jrGgplot2")
 data(bond, package = "jrGgplot2")
 ggplot(bond, aes(Actor, Alcohol_Units)) +
              stat_summary(geom = "point", fun.y = mean)
