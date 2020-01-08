@@ -75,5 +75,5 @@ ggplot(yeast, aes(x = gvh, y = mcg)) +
   ylab("McGeoch's method")
 
 ## ----eval=FALSE, echo=TRUE-----------------
-library(jrGgplot2)
-vignette("solutions2", package = "jrGgplot2")
+# library(jrGgplot2)
+# vignette("solutions2", package = "jrGgplot2")
